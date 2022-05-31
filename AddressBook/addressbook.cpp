@@ -32,17 +32,17 @@ void AddressBook::submitContact()
 
     if (name == "" || address == "")
     {
-        QMessageBox::information(this, tr("Empty Field"),
-            tr("Please enter a name and address."));
+        QMessageBox::information(this, tr("Пустое поле"),
+            tr("Пожалуйста, введите имя или адрес"));
         return;
     }
     if (!contacts.contains(name)) {
              contacts.insert(name, address);
-             QMessageBox::information(this, tr("Add Successful"),
-                 tr("\"%1\" has been added to your address book.").arg(name));
+             QMessageBox::information(this, tr("Добавление успешно"),
+                 tr("\"%1\" добавлен в адресную книгу.").arg(name));
          } else {
-             QMessageBox::information(this, tr("Add Unsuccessful"),
-                 tr("Sorry, \"%1\" is already in your address book.").arg(name));
+             QMessageBox::information(this, tr("Добавление успешно"),
+                 tr("Извините, \"%1\" уже внесен в адресную книгу").arg(name));
              return;
          }
     if (contacts.isEmpty()) {
@@ -61,29 +61,29 @@ void AddressBook::submitContact()
 
         if (!contacts.contains(name)) {
             contacts.insert(name, address);
-            QMessageBox::information(this, tr("Add Successful"),
-                tr("\"%1\" has been added to your address book.").arg(name));
+            QMessageBox::information(this, tr("Добавление успешно"),
+                tr("\"%1\" добавлен в адресную книгу.").arg(name));
         } else {
-            QMessageBox::information(this, tr("Add Unsuccessful"),
-                tr("Sorry, \"%1\" is already in your address book.").arg(name));
+            QMessageBox::information(this, tr("Добавление безуспешно"),
+                tr("Извините, \"%1\" уже внесен в адресную книгу.").arg(name));
             return;
         }
     } else if (currentMode == EditingMode) {
 
              if (oldName != name) {
                  if (!contacts.contains(name)) {
-                     QMessageBox::information(this, tr("Edit Successful"),
-                         tr("\"%1\" has been edited in your address book.").arg(oldName));
+                     QMessageBox::information(this, tr("Редактирование успешно"),
+                         tr("\"%1\" отредактирован в адресной книге.").arg(oldName));
                      contacts.remove(oldName);
                      contacts.insert(name, address);
                  } else {
-                     QMessageBox::information(this, tr("Edit Unsuccessful"),
-                         tr("Sorry, \"%1\" is already in your address book.").arg(name));
+                     QMessageBox::information(this, tr("Редактирование успешно"),
+                         tr("Извините, \"%1\" уже внесен в адресную книгу.").arg(name));
                      return;
                  }
              } else if (oldAddress != address) {
-                 QMessageBox::information(this, tr("Edit Successful"),
-                     tr("\"%1\" has been edited in your address book.").arg(name));
+                 QMessageBox::information(this, tr("Редактирование успешно"),
+                     tr("\"%1\" отредактирован в адресной книге.").arg(name));
                  contacts[name] = address;
              }
          }
@@ -154,8 +154,8 @@ void AddressBook::removeContact()
      if (contacts.contains(name)) {
 
          int button = QMessageBox::question(this,
-             tr("Confirm Remove"),
-             tr("Are you sure you want to remove \"%1\"?").arg(name),
+             tr("Подтвердите действие"),
+             tr("Вы увеерны что хотите удалить \"%1\"?").arg(name),
              QMessageBox::Yes | QMessageBox::No);
 
          if (button == QMessageBox::Yes) {
@@ -163,8 +163,8 @@ void AddressBook::removeContact()
              previous();
              contacts.remove(name);
 
-             QMessageBox::information(this, tr("Remove Successful"),
-                 tr("\"%1\" has been removed from your address book.").arg(name));
+             QMessageBox::information(this, tr("Удаление успешно"),
+                 tr("\"%1\" был удален из адресной книги.").arg(name));
          }
      }
 
@@ -223,10 +223,10 @@ AddressBook::AddressBook(QWidget *parent) //Класс содержит объя
      : QWidget(parent)
  {
     //Внутри конструктора AddressBook мы устанавливаем nameLine и addressText только для чтения, так что мы можем только отображать, но не редактировать детали имеющихся контактов.
-     QLabel *nameLabel = new QLabel(tr("Name:"));
+     QLabel *nameLabel = new QLabel(tr("ФИО:"));
      nameLine = new QLineEdit;
 
-     QLabel *addressLabel = new QLabel(tr("Address:"));
+     QLabel *addressLabel = new QLabel(tr("Адрес:"));
      addressText = new QTextEdit;
 
      QGridLayout *mainLayout = new QGridLayout; //Мы используем QGridLayout чтобы структурировано расположить метки и поля ввода.
@@ -237,13 +237,13 @@ AddressBook::AddressBook(QWidget *parent) //Класс содержит объя
           nameLine->setReadOnly(true);
           addressText->setReadOnly(true);
 
-     addButton = new QPushButton(tr("&Add"));
+     addButton = new QPushButton(tr("&Добавить"));
           addButton->show();
 
-     submitButton = new QPushButton(tr("&Submit"));
+     submitButton = new QPushButton(tr("&Подтвердить"));
           submitButton->hide();
 
-     cancelButton = new QPushButton(tr("&Cancel"));
+     cancelButton = new QPushButton(tr("&Выйти"));
           cancelButton->hide();
 
      connect(addButton, SIGNAL(clicked()), this, SLOT(addContact()));
@@ -264,10 +264,10 @@ AddressBook::AddressBook(QWidget *parent) //Класс содержит объя
         mainLayout->addWidget(addressText, 1, 1);
         mainLayout->addLayout(buttonLayout1, 1, 2);
 
-    nextButton = new QPushButton(tr("&Next"));
+    nextButton = new QPushButton(tr("&Следующий"));
         nextButton->setEnabled(false);
 
-    previousButton = new QPushButton(tr("&Previous"));
+    previousButton = new QPushButton(tr("&Пердыдущий"));
         previousButton->setEnabled(false);
 
     connect(nextButton, SIGNAL(clicked()), this, SLOT(next()));
@@ -286,9 +286,9 @@ AddressBook::AddressBook(QWidget *parent) //Класс содержит объя
 
 
 
-    editButton = new QPushButton(tr("&Edit"));
+    editButton = new QPushButton(tr("&Редактировать"));
          editButton->setEnabled(false);
-    removeButton = new QPushButton(tr("&Remove"));
+    removeButton = new QPushButton(tr("&Удалить"));
          removeButton->setEnabled(false);
 
          connect(editButton, SIGNAL(clicked()), this, SLOT(editContact()));
@@ -296,6 +296,6 @@ AddressBook::AddressBook(QWidget *parent) //Класс содержит объя
               buttonLayout1->addWidget(editButton);
               buttonLayout1->addWidget(removeButton);
 
-    setWindowTitle(tr("Simple Address Book"));
+    setWindowTitle(tr("-----Адресная книга------"));
 
 }
