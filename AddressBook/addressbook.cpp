@@ -4,6 +4,9 @@
 #include<QGridLayout>
 #include<QVBoxLayout>
 #include<QMessageBox>
+#include<QtSql/QSqlDatabase>
+#include<QtSql/QSqlError>
+#include<QMessageBox>
 
 QPushButton *editButton;
 QPushButton *removeButton;
@@ -23,6 +26,10 @@ void AddressBook::addContact()
     addButton->setEnabled(false);
     submitButton->show();
     cancelButton->show();
+    QSqlQuery query;
+
+    query.exec("INSERT INTO newDB (name, address) "
+               "VALUES (" + nameLine + "," + addressText")");
 }
 
 void AddressBook::submitContact()
@@ -169,6 +176,10 @@ void AddressBook::removeContact()
      }
 
      updateInterface(NavigationMode);
+     QSqlQuery query;
+
+     query.exec("DELETE FROM newDB WHERE name = " + nameLine);
+     query.exec("DELETE FROM newDB WHERE address = " + addressText);
  }
 
 void AddressBook::updateInterface(Mode mode)
@@ -216,6 +227,8 @@ void AddressBook::updateInterface(Mode mode)
         submitButton->hide();
         cancelButton->hide();
         break;
+        QSqlQuery query;
+        query.exec("SELECT * FROM newDB");
     }
 }
 
@@ -297,5 +310,14 @@ AddressBook::AddressBook(QWidget *parent) //Класс содержит объя
               buttonLayout1->addWidget(removeButton);
 
     setWindowTitle(tr("-----Адресная книга------"));
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
+    db.setHostName("localhost");
+    db.setDatabaseName("newDB");
+    db.setUserName("user");
+    db.setPassword("qwerty");
+    if (!db.open())
+    QMessageBox::critical(NULL,QObject::tr("Ошибка"),db.lastError().text());
+    bool b = db.open();
 
 }
