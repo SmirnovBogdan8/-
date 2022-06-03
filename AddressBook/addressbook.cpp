@@ -1,4 +1,5 @@
 #include "addressbook.h"
+#include "qglobal.h"
 #include<QLabel>
 #include<QTextEdit>
 #include<QGridLayout>
@@ -6,7 +7,8 @@
 #include<QMessageBox>
 #include<QtSql/QSqlDatabase>
 #include<QtSql/QSqlError>
-#include<QMessageBox>
+#include<QtSql/QSqlQuery>
+#include<QtSql/QSqlQueryModel>
 
 QPushButton *editButton;
 QPushButton *removeButton;
@@ -26,10 +28,15 @@ void AddressBook::addContact()
     addButton->setEnabled(false);
     submitButton->show();
     cancelButton->show();
-    QSqlQuery query;
 
-    query.exec("INSERT INTO newDB (name, address) "
-               "VALUES (" + nameLine + "," + addressText")");
+    QString name = nameLine->text();
+    QString address = addressText->toPlainText();
+    QSqlQuery query;
+    query.prepare("INSERT INTO addressbook (name, address) "
+                  " VALUES (:name, :address)");
+    query.bindValue(":name", name);
+    query.bindValue(":address", address);
+    query.exec();
 }
 
 void AddressBook::submitContact()
@@ -177,9 +184,9 @@ void AddressBook::removeContact()
 
      updateInterface(NavigationMode);
      QSqlQuery query;
-
-     query.exec("DELETE FROM newDB WHERE name = " + nameLine);
-     query.exec("DELETE FROM newDB WHERE address = " + addressText);
+     query.prepare("DELETE FROM addressbook WHERE name = :name");
+     query.bindValue(":name", name);
+     query.exec();
  }
 
 void AddressBook::updateInterface(Mode mode)
@@ -317,7 +324,6 @@ AddressBook::AddressBook(QWidget *parent) //Класс содержит объя
     db.setUserName("user");
     db.setPassword("qwerty");
     if (!db.open())
-    QMessageBox::critical(NULL,QObject::tr("Ошибка"),db.lastError().text());
-    bool b = db.open();
+        QMessageBox::critical(NULL,QObject::tr("Ошибка"),db.lastError().text());
 
 }

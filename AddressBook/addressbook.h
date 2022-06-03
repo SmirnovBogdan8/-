@@ -4,6 +4,8 @@
 #include<QTextEdit>
 #include <QWidget>
 #include<QPushButton>
+#include<QtSql>
+#include<QtCore>
 
 class AddressBook : public QWidget //Реализация класса AddressBook
 {
@@ -40,7 +42,8 @@ private:
      QString oldAddress;
      QPushButton *nextButton;
      QPushButton *previousButton;
-
+     QSqlQueryModel *model;
+     QSqlDatabase bd;
 };
 
 #endif // ADDRESSBOOK_H
